@@ -29,7 +29,8 @@ function Contribute() {
     let fileUrl = externalLink;
 
     if (file) {
-      const fileName = `${Date.now()}-${file.name}`;
+      const safeFileName = file.name.replace(/[^a-zA-Z0-9.]/g, "-");
+const fileName = `${userData.user.id}/${Date.now()}-${safeFileName}`;
 
       const { error: uploadError } = await supabase.storage
         .from("resources")
