@@ -4,6 +4,8 @@ import { supabase } from "../lib/supabaseClient";
 
 function Resources() {
   const [resources, setResources] = useState([]);
+  const [search, setSearch] = useState("");
+  const [typeFilter, setTypeFilter] = useState("All");
 
   const fetchResources = async () => {
     const { data, error } = await supabase
@@ -24,6 +26,17 @@ function Resources() {
     fetchResources();
   }, []);
 
+  const filteredResources = resources.filter((item) => {
+    const matchesSearch =
+      item.title?.toLowerCase().includes(search.toLowerCase()) ||
+      item.subject?.toLowerCase().includes(search.toLowerCase()) ||
+      item.description?.toLowerCase().includes(search.toLowerCase());
+
+    const matchesType = typeFilter === "All" || item.type === typeFilter;
+
+    return matchesSearch && matchesType;
+  });
+
   return (
     <DashboardLayout>
       <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
@@ -32,7 +45,7 @@ function Resources() {
             Notes & PYQ Hub
           </h1>
           <p className="mt-2 text-slate-600">
-            Access approved notes, PYQs, viva questions, and study resources.
+            Search approved notes, PYQs, viva questions, and study resources.
           </p>
         </div>
 
@@ -44,11 +57,39 @@ function Resources() {
         </a>
       </div>
 
+      <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-3">
+        <input
+          type="text"
+          placeholder="Search by title, subject, or description..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="rounded-xl border border-slate-300 p-3 md:col-span-2"
+        />
+
+        <select
+          value={typeFilter}
+          onChange={(e) => setTypeFilter(e.target.value)}
+          className="rounded-xl border border-slate-300 p-3"
+        >
+          <option>All</option>
+          <option>Notes</option>
+          <option>PYQ</option>
+          <option>Assignment</option>
+          <option>Viva Questions</option>
+          <option>Useful Link</option>
+          <option>Placement Resource</option>
+        </select>
+      </div>
+
+      <p className="mt-4 text-sm text-slate-500">
+        Showing {filteredResources.length} resource(s)
+      </p>
+
       <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-        {resources.length === 0 ? (
-          <p className="text-slate-500">No approved resources available yet.</p>
+        {filteredResources.length === 0 ? (
+          <p className="text-slate-500">No resources found.</p>
         ) : (
-          resources.map((item) => (
+          filteredResources.map((item) => (
             <div key={item.id} className="rounded-3xl bg-white p-6 shadow-sm">
               <div className="mb-4 flex items-center justify-between">
                 <span className="rounded-full bg-blue-100 px-3 py-1 text-sm font-semibold text-blue-700">
