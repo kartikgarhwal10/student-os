@@ -1,0 +1,12 @@
+{
+  "name": "Student OS",
+  "short_name": "StudentOS",
+  "description": "Attendance, CGPA, Assignments, Resources and Productivity Platform",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#2563eb",
+  "orientation": "portrait",
+  "scope": "/",
+  "icons": []
+}
