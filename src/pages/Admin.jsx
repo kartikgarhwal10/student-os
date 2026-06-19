@@ -8,6 +8,14 @@ function Admin() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [checkingRole, setCheckingRole] = useState(true);
 
+  const [stats, setStats] = useState({
+    users: 0,
+    resources: 0,
+    assignments: 0,
+    attendance: 0,
+    cgpa: 0,
+  });
+
   const checkAdminRole = async () => {
     const { data: userData } = await supabase.auth.getUser();
 
@@ -25,6 +33,36 @@ function Admin() {
 
     setIsAdmin(data?.role === "admin");
     setCheckingRole(false);
+  };
+
+  const fetchStats = async () => {
+    const { count: users } = await supabase
+      .from("profiles")
+      .select("*", { count: "exact", head: true });
+
+    const { count: resources } = await supabase
+      .from("resources")
+      .select("*", { count: "exact", head: true });
+
+    const { count: assignments } = await supabase
+      .from("assignments")
+      .select("*", { count: "exact", head: true });
+
+    const { count: attendance } = await supabase
+      .from("attendance")
+      .select("*", { count: "exact", head: true });
+
+    const { count: cgpa } = await supabase
+      .from("cgpa")
+      .select("*", { count: "exact", head: true });
+
+    setStats({
+      users: users || 0,
+      resources: resources || 0,
+      assignments: assignments || 0,
+      attendance: attendance || 0,
+      cgpa: cgpa || 0,
+    });
   };
 
   const fetchResources = async () => {
@@ -47,6 +85,7 @@ function Admin() {
   useEffect(() => {
     checkAdminRole();
     fetchResources();
+    fetchStats();
   }, []);
 
   const updateStatus = async (id, status) => {
@@ -66,6 +105,7 @@ function Admin() {
     }
 
     fetchResources();
+    fetchStats();
   };
 
   const deleteResource = async (id) => {
@@ -82,6 +122,7 @@ function Admin() {
     }
 
     fetchResources();
+    fetchStats();
   };
 
   if (checkingRole) {
@@ -113,26 +154,53 @@ function Admin() {
     <DashboardLayout>
       <div>
         <h1 className="text-3xl font-bold text-slate-900">
-          Admin Approval Panel
+          Admin Analytics & Approval Panel
         </h1>
         <p className="mt-2 text-slate-600">
-          Review, approve, reject, or delete student-submitted resources.
+          Monitor platform activity and manage submitted resources.
         </p>
+      </div>
+
+      <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-5">
+        <div className="rounded-3xl bg-white p-5 shadow-sm">
+          <p className="text-sm text-slate-500">Total Users</p>
+          <h2 className="mt-2 text-3xl font-bold">{stats.users}</h2>
+        </div>
+
+        <div className="rounded-3xl bg-white p-5 shadow-sm">
+          <p className="text-sm text-slate-500">Total Resources</p>
+          <h2 className="mt-2 text-3xl font-bold">{stats.resources}</h2>
+        </div>
+
+        <div className="rounded-3xl bg-white p-5 shadow-sm">
+          <p className="text-sm text-slate-500">Assignments</p>
+          <h2 className="mt-2 text-3xl font-bold">{stats.assignments}</h2>
+        </div>
+
+        <div className="rounded-3xl bg-white p-5 shadow-sm">
+          <p className="text-sm text-slate-500">Attendance Records</p>
+          <h2 className="mt-2 text-3xl font-bold">{stats.attendance}</h2>
+        </div>
+
+        <div className="rounded-3xl bg-white p-5 shadow-sm">
+          <p className="text-sm text-slate-500">CGPA Records</p>
+          <h2 className="mt-2 text-3xl font-bold">{stats.cgpa}</h2>
+        </div>
       </div>
 
       <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-3">
         <div className="rounded-3xl bg-white p-5 shadow-sm">
-          <p className="text-sm text-slate-500">Pending</p>
+          <p className="text-sm text-slate-500">Pending Resources</p>
           <h2 className="mt-2 text-3xl font-bold">{pendingCount}</h2>
         </div>
 
         <div className="rounded-3xl bg-white p-5 shadow-sm">
-          <p className="text-sm text-slate-500">Approved</p>
+          <p className="text-sm text-slate-500">Approved Resources</p>
           <h2 className="mt-2 text-3xl font-bold">{approvedCount}</h2>
         </div>
 
         <div className="rounded-3xl bg-white p-5 shadow-sm">
-          <p className="text-sm text-slate-500">Rejected</p>
+          <p className="text-sm text-slate-500">Rejected Resources</p>
           <h2 className="mt-2 text-3xl font-bold">{rejectedCount}</h2>
         </div>
       </div>
