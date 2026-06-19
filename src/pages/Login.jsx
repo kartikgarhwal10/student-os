@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
+import AuthMascot from "../components/AuthMascot";
 
 function Login() {
   const navigate = useNavigate();
@@ -27,8 +28,10 @@ function Login() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-950 p-6">
-      <div className="w-full max-w-md rounded-3xl bg-slate-900 p-8">
+    <div className="flex min-h-screen items-center justify-center overflow-hidden bg-slate-950 p-6">
+      <div className="relative w-full max-w-md rounded-3xl bg-slate-900 p-8 shadow-2xl">
+        <AuthMascot mode="login" />
+
         <h1 className="text-3xl font-bold text-white">Welcome Back 👋</h1>
         <p className="mt-2 text-slate-400">Login to Student OS</p>
 
@@ -38,7 +41,7 @@ function Login() {
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full rounded-xl border border-slate-700 bg-slate-800 p-3 text-white"
+            className="w-full rounded-xl border border-slate-700 bg-slate-800 p-3 text-white outline-none focus:border-blue-500"
             required
           />
 
@@ -47,11 +50,11 @@ function Login() {
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full rounded-xl border border-slate-700 bg-slate-800 p-3 text-white"
+            className="w-full rounded-xl border border-slate-700 bg-slate-800 p-3 text-white outline-none focus:border-blue-500"
             required
           />
 
-          <button className="w-full rounded-xl bg-blue-500 p-3 font-semibold text-white">
+          <button className="w-full rounded-xl bg-blue-500 p-3 font-semibold text-white transition hover:bg-blue-600">
             Login
           </button>
         </form>

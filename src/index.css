@@ -10,3 +10,68 @@ body {
   background: #f8fafc;
   color: #0f172a;
 }
+@keyframes characterWalk {
+  0% {
+    transform: translateX(-120px);
+  }
+  60% {
+    transform: translateX(150px);
+  }
+  100% {
+    transform: translateX(150px);
+  }
+}
+
+@keyframes ropePull {
+  0% {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+  40% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+
+@keyframes wave {
+  0%,100% {
+    transform: rotate(10deg);
+  }
+  50% {
+    transform: rotate(-35deg);
+  }
+}
+
+@keyframes legMove {
+  0%,100% {
+    transform: rotate(8deg);
+  }
+  50% {
+    transform: rotate(-20deg);
+  }
+}
+
+.animate-characterWalk {
+  animation: characterWalk 2.2s ease-out forwards;
+}
+
+.animate-ropePull {
+  animation: ropePull 2.2s ease-out forwards;
+}
+
+.animate-wave {
+  animation: wave 1.2s ease-in-out infinite;
+}
+
+.animate-leg {
+  animation: legMove 0.8s ease-in-out infinite;
+}
+
+.animate-legDelay {
+  animation: legMove 0.8s ease-in-out infinite;
+  animation-delay: 0.4s;
+}
