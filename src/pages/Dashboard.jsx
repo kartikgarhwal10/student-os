@@ -21,7 +21,6 @@ function Dashboard() {
 
   const loadDashboardData = async () => {
     const { data: userData } = await supabase.auth.getUser();
-
     if (!userData?.user) return;
 
     const userId = userData.user.id;
@@ -32,9 +31,7 @@ function Dashboard() {
       .eq("id", userId)
       .single();
 
-    if (profile?.full_name) {
-      setUserName(profile.full_name);
-    }
+    if (profile?.full_name) setUserName(profile.full_name);
 
     const { count: attendanceTotal } = await supabase
       .from("attendance")
@@ -45,14 +42,12 @@ function Dashboard() {
 
     const { data: cgpaData } = await supabase
       .from("cgpa")
-      .select("sgpa, semester")
+      .select("sgpa")
       .eq("user_id", userId)
       .order("created_at", { ascending: false })
       .limit(1);
 
-    if (cgpaData?.length > 0) {
-      setLatestSgpa(cgpaData[0].sgpa);
-    }
+    if (cgpaData?.length > 0) setLatestSgpa(cgpaData[0].sgpa);
 
     const { count: assignmentCount } = await supabase
       .from("assignments")
@@ -71,7 +66,7 @@ function Dashboard() {
 
     const { data: upcoming } = await supabase
       .from("assignments")
-      .select("title, subject, due_date, status")
+      .select("title, subject, due_date")
       .eq("user_id", userId)
       .eq("status", "Pending")
       .order("due_date", { ascending: true })
@@ -154,7 +149,7 @@ function Dashboard() {
                 <div key={index} className="rounded-2xl bg-slate-100 p-4">
                   <p className="font-semibold">{item.title}</p>
                   <p className="text-sm text-slate-500">
-                    {item.subject} • Due: {item.due_date}
+                    {item.subject} - Due: {item.due_date}
                   </p>
                 </div>
               ))
@@ -175,7 +170,7 @@ function Dashboard() {
                 <div key={index} className="rounded-2xl bg-slate-100 p-4">
                   <p className="font-semibold">{item.title}</p>
                   <p className="text-sm text-slate-500">
-                    {item.subject} • {item.type}
+                    {item.subject} - {item.type}
                   </p>
                 </div>
               ))
