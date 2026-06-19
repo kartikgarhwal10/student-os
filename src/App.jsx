@@ -10,6 +10,7 @@ import Assignments from "./pages/Assignments";
 import Resources from "./pages/Resources";
 import Contribute from "./pages/Contribute";
 import Admin from "./pages/Admin";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
@@ -19,13 +20,69 @@ function App() {
 
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
-      <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/attendance" element={<Attendance />} />
-      <Route path="/cgpa" element={<CGPA />} />
-      <Route path="/assignments" element={<Assignments />} />
-      <Route path="/resources" element={<Resources />} />
-      <Route path="/contribute" element={<Contribute />} />
-      <Route path="/admin" element={<Admin />} />
+
+      <Route
+        path="/dashboard"
+        element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/attendance"
+        element={
+          <ProtectedRoute>
+            <Attendance />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/cgpa"
+        element={
+          <ProtectedRoute>
+            <CGPA />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/assignments"
+        element={
+          <ProtectedRoute>
+            <Assignments />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/resources"
+        element={
+          <ProtectedRoute>
+            <Resources />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/contribute"
+        element={
+          <ProtectedRoute>
+            <Contribute />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/admin"
+        element={
+          <ProtectedRoute>
+            <Admin />
+          </ProtectedRoute>
+        }
+      />
 
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

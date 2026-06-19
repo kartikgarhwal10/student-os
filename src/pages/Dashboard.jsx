@@ -1,19 +1,53 @@
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import DashboardLayout from "../layouts/DashboardLayout";
 import DashboardCard from "../components/DashboardCard";
+import { supabase } from "../lib/supabaseClient";
 
 function Dashboard() {
+  const navigate = useNavigate();
+  const [userName, setUserName] = useState("Student");
+
+  useEffect(() => {
+    const getProfile = async () => {
+      const { data: userData } = await supabase.auth.getUser();
+
+      if (userData?.user) {
+        const { data } = await supabase
+          .from("profiles")
+          .select("full_name")
+          .eq("id", userData.user.id)
+          .single();
+
+        if (data?.full_name) {
+          setUserName(data.full_name);
+        }
+      }
+    };
+
+    getProfile();
+  }, []);
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate("/login");
+  };
+
   return (
     <DashboardLayout>
       <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
         <div>
           <h1 className="text-3xl font-bold text-slate-900">Dashboard</h1>
           <p className="mt-2 text-slate-600">
-            Your complete college productivity overview.
+            Welcome back, {userName}.
           </p>
         </div>
 
-        <button className="rounded-xl bg-blue-600 px-5 py-3 font-semibold text-white">
-          + Add Resource
+        <button
+          onClick={handleLogout}
+          className="rounded-xl bg-red-600 px-5 py-3 font-semibold text-white"
+        >
+          Logout
         </button>
       </div>
 

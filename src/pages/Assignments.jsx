@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DashboardLayout from "../layouts/DashboardLayout";
+import { supabase } from "../lib/supabaseClient";
 
 function Assignments() {
   const [assignments, setAssignments] = useState([]);
@@ -7,40 +8,86 @@ function Assignments() {
   const [subject, setSubject] = useState("");
   const [dueDate, setDueDate] = useState("");
 
-  const addAssignment = () => {
-    if (!title || !subject || !dueDate) return;
+  const fetchAssignments = async () => {
+    const { data: userData } = await supabase.auth.getUser();
 
-    setAssignments([
-      ...assignments,
-      {
-        id: Date.now(),
-        title,
-        subject,
-        dueDate,
-        status: "Pending",
-      },
-    ]);
+    if (!userData?.user) return;
+
+    const { data } = await supabase
+      .from("assignments")
+      .select("*")
+      .eq("user_id", userData.user.id)
+      .order("created_at", { ascending: false });
+
+    if (data) {
+      setAssignments(data);
+    }
+  };
+
+  useEffect(() => {
+    fetchAssignments();
+  }, []);
+
+  const addAssignment = async () => {
+    if (!title || !subject || !dueDate) {
+      alert("Please fill all fields");
+      return;
+    }
+
+    const { data: userData } = await supabase.auth.getUser();
+
+    if (!userData?.user) {
+      alert("Please login first");
+      return;
+    }
+
+    const { error } = await supabase.from("assignments").insert({
+      user_id: userData.user.id,
+      title,
+      subject,
+      due_date: dueDate,
+      status: "Pending",
+    });
+
+    if (error) {
+      alert(error.message);
+      return;
+    }
 
     setTitle("");
     setSubject("");
     setDueDate("");
+    fetchAssignments();
   };
 
-  const toggleStatus = (id) => {
-    setAssignments(
-      assignments.map((item) =>
-        item.id === id
-          ? {
-              ...item,
-              status: item.status === "Pending" ? "Completed" : "Pending",
-            }
-          : item
-      )
-    );
+  const toggleStatus = async (id, currentStatus) => {
+    const newStatus = currentStatus === "Pending" ? "Completed" : "Pending";
+
+    const { error } = await supabase
+      .from("assignments")
+      .update({ status: newStatus })
+      .eq("id", id);
+
+    if (error) {
+      alert(error.message);
+      return;
+    }
+
+    fetchAssignments();
   };
 
-  const deleteAssignment = (id) => {
-    setAssignments(assignments.filter((item) => item.id !== id));
+  const deleteAssignment = async (id) => {
+    const { error } = await supabase
+      .from("assignments")
+      .delete()
+      .eq("id", id);
+
+    if (error) {
+      alert(error.message);
+      return;
+    }
+
+    fetchAssignments();
   };
 
   const pendingCount = assignments.filter(
@@ -64,9 +111,7 @@ function Assignments() {
 
       <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
         <div className="rounded-3xl bg-white p-6 shadow-sm">
-          <h2 className="text-xl font-bold text-slate-900">
-            Add Assignment
-          </h2>
+          <h2 className="text-xl font-bold text-slate-900">Add Assignment</h2>
 
           <div className="mt-5 space-y-4">
             <input
@@ -121,21 +166,18 @@ function Assignments() {
               <p className="text-slate-400">No assignments added yet.</p>
             ) : (
               assignments.map((item) => (
-                <div
-                  key={item.id}
-                  className="rounded-2xl bg-slate-900 p-4"
-                >
+                <div key={item.id} className="rounded-2xl bg-slate-900 p-4">
                   <div className="flex flex-col justify-between gap-3 md:flex-row md:items-center">
                     <div>
                       <h3 className="font-bold">{item.title}</h3>
                       <p className="text-sm text-slate-400">
-                        {item.subject} • Due: {item.dueDate}
+                        {item.subject} • Due: {item.due_date}
                       </p>
                     </div>
 
                     <div className="flex gap-2">
                       <button
-                        onClick={() => toggleStatus(item.id)}
+                        onClick={() => toggleStatus(item.id, item.status)}
                         className="rounded-xl bg-green-600 px-4 py-2 text-sm font-semibold text-white"
                       >
                         {item.status}
