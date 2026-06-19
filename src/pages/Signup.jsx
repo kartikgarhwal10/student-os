@@ -13,7 +13,7 @@ function Signup() {
     e.preventDefault();
     setMessage("Creating account...");
 
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -26,13 +26,28 @@ function Signup() {
 
     if (error) {
       setMessage(error.message);
-    } else {
-      setMessage("Account created! Please check your email for verification.");
-      setFullName("");
-      setCollege("");
-      setEmail("");
-      setPassword("");
+      return;
     }
+
+    if (data.user) {
+      const { error: profileError } = await supabase.from("profiles").insert({
+        id: data.user.id,
+        full_name: fullName,
+        college: college,
+        email: email,
+      });
+
+      if (profileError) {
+        setMessage(profileError.message);
+        return;
+      }
+    }
+
+    setMessage("Account created! Please check your email for verification.");
+    setFullName("");
+    setCollege("");
+    setEmail("");
+    setPassword("");
   };
 
   return (
