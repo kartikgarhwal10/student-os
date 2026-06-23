@@ -10,9 +10,16 @@ import Assignments from "./pages/Assignments";
 import Resources from "./pages/Resources";
 import Contribute from "./pages/Contribute";
 import Admin from "./pages/Admin";
+import Maintenance from "./pages/Maintenance";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
+  const MAINTENANCE_MODE = false;
+
+  if (MAINTENANCE_MODE) {
+    return <Maintenance />;
+  }
+
   return (
     <Routes>
       <Route path="/" element={<Home />} />

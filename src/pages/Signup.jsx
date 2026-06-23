@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
+import AuthMascot from "../components/AuthMascot";
 
 function Signup() {
   const [fullName, setFullName] = useState("");
@@ -51,8 +52,10 @@ function Signup() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-950 p-6">
-      <div className="w-full max-w-md rounded-3xl bg-slate-900 p-8">
+    <div className="flex min-h-screen items-center justify-center overflow-hidden bg-slate-950 p-6">
+      <div className="relative w-full max-w-md rounded-3xl bg-slate-900 p-8 shadow-2xl">
+        <AuthMascot mode="signup" />
+
         <h1 className="text-3xl font-bold text-white">Create Account 🚀</h1>
         <p className="mt-2 text-slate-400">Join Student OS by KartikLabs</p>
 
@@ -62,7 +65,7 @@ function Signup() {
             placeholder="Full Name"
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
-            className="w-full rounded-xl border border-slate-700 bg-slate-800 p-3 text-white"
+            className="w-full rounded-xl border border-slate-700 bg-slate-800 p-3 text-white outline-none focus:border-blue-500"
             required
           />
 
@@ -71,7 +74,7 @@ function Signup() {
             placeholder="College Name"
             value={college}
             onChange={(e) => setCollege(e.target.value)}
-            className="w-full rounded-xl border border-slate-700 bg-slate-800 p-3 text-white"
+            className="w-full rounded-xl border border-slate-700 bg-slate-800 p-3 text-white outline-none focus:border-blue-500"
             required
           />
 
@@ -80,7 +83,7 @@ function Signup() {
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full rounded-xl border border-slate-700 bg-slate-800 p-3 text-white"
+            className="w-full rounded-xl border border-slate-700 bg-slate-800 p-3 text-white outline-none focus:border-blue-500"
             required
           />
 
@@ -89,11 +92,11 @@ function Signup() {
             placeholder="Password minimum 6 characters"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full rounded-xl border border-slate-700 bg-slate-800 p-3 text-white"
+            className="w-full rounded-xl border border-slate-700 bg-slate-800 p-3 text-white outline-none focus:border-blue-500"
             required
           />
 
-          <button className="w-full rounded-xl bg-blue-500 p-3 font-semibold text-white">
+          <button className="w-full rounded-xl bg-blue-500 p-3 font-semibold text-white transition hover:bg-blue-600">
             Create Account
           </button>
         </form>
