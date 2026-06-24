@@ -333,10 +333,10 @@ function Maintenance() {
 
           {/* Status items */}
           <div className="fade-up fade-up-5" style={{ display: "flex", flexDirection: "column", gap: "0.5rem", marginBottom: "1.75rem" }}>
-            <StatusItem icon="🗄️" label="Database"        status="Migrating"  color="yellow" />
-            <StatusItem icon="⚙️" label="API Services"    status="Restarting" color="blue"   />
-            <StatusItem icon="🔒" label="Auth System"     status="Online"     color="green"  />
-            <StatusItem icon="🎨" label="UI / Frontend"   status="Deploying"  color="yellow" />
+            <StatusItem icon="🗄️" label="Database" status="Migrating" color="yellow" />
+            <StatusItem icon="⚙️" label="API Services" status="Restarting" color="blue" />
+            <StatusItem icon="🔒" label="Auth System" status="Online" color="green" />
+            <StatusItem icon="🎨" label="UI / Frontend" status="Deploying" color="yellow" />
           </div>
 
           {/* Footer */}
@@ -362,6 +362,7 @@ function Maintenance() {
               }}
             >
               🚀 Built by KartikLabs
+              For more contact to admin - kartiklabs.dev@gmail.com
             </span>
           </div>
         </div>
