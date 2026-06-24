@@ -14,7 +14,7 @@ import Maintenance from "./pages/Maintenance";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
-  const MAINTENANCE_MODE = false;
+  const MAINTENANCE_MODE = true;
 
   if (MAINTENANCE_MODE) {
     return <Maintenance />;
